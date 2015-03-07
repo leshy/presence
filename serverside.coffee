@@ -5,7 +5,9 @@ helpers = require 'helpers'
 Bacbone = require 'backbone4000'
 collections = require 'collections/serverside'
 
-lweb = require 'lweb3/transports/server/websocket'
+lwebNs = require 'lweb3/transports/server/nssocket'
+lwebWs = require 'lweb3/transports/server/websocket'
+
 queryProtocol = require 'lweb3/protocols/query'
 channelProtocol = require 'lweb3/protocols/channel'
 
@@ -24,6 +26,9 @@ settings =
             views: __dirname + '/ejs'
             cookiesecret: helpers.rndid(30)
 
+
+    probePort: 3131
+    
     irc:
         nick: 'mamaPresence'
         pass: false
@@ -80,20 +85,17 @@ initIrc = (env,callback) ->
     client.addListener 'join', ->
         if pass = env.settings.irc.nickpass then client.say('nickserv', "identify #{pass}")            
         client.say env.settings.irc.channel, "My body (v.#{env.version}) is ready"
-        
-        env.lweb.channel('chat-global').subscribe (msg) ->
-            client.say env.settings.irc.channel, "<#{msg.fromName}> #{msg.msg}"
-        
+                
         callback()            
 
 initLweb = (env,callback) ->
-    env.lweb = new lweb.webSocketServer http: env.http, verbose: false
+    env.lweb = new lwebWs.webSocketServer http: env.http, verbose: false
     env.lweb.addProtocol new queryProtocol.serverServer verbose: false
     env.lweb.addProtocol new channelProtocol.serverServer verbose: false
     callback()
 
 initModels = (env,callback) ->
-    true
+    callback()
 
 initRoutes = (env,callback) ->
     logreq = (req,res,next) ->
@@ -115,7 +117,6 @@ initRoutes = (env,callback) ->
 
     callback()
 
-
 dropPrivileges = (env,callback) ->
     if not env.settings.user then return callback null, colors.magenta("WARNING: staying at uid #{process.getuid()}")
 
@@ -130,13 +131,35 @@ dropPrivileges = (env,callback) ->
         else return callback err
     callback null, "dropped to " + user + "/" + group
 
-
 initLweb = (env,callback) ->
-    env.lweb = new lweb.webSocketServer http: env.http, verbose: false
+    env.lweb = new lwebWs.webSocketServer http: env.http, verbose: false
     env.lweb.addProtocol new queryProtocol.serverServer verbose: false
     env.lweb.addProtocol new channelProtocol.serverServer verbose: false
     callback()
 
+initReader = (env,callback) ->
+    env.probeListener = new lwebNs.nssocketServer
+        port: settings.probePort, name: 'probe'
+        
+    env.probeListener.on 'connect', (channel) ->
+        console.log 'connection received'
+        channel.subscribe true, (msg) -> console.log 'got',msg
+        
+    env.probeListener.on 'disconnect', ->
+        console.log 'connection lost'
+        
+    callback null, "port #{settings.probePort}"
+
+initModels = (env,callback) ->    
+    env.logdb = new collections.MongoCollection collection: 'log', db: env.db
+    env.logdb.defineModel 'entry', {}
+    callback null, true
+
+initWriter = (env,callback) ->
+    callback null, true
+
+initTestData = (env,callback) ->
+    true
 
 init = (env,callback) ->
     async.auto
@@ -145,6 +168,9 @@ init = (env,callback) ->
         privileges: [ 'ribcage', (callback) -> dropPrivileges env, env.logres('drop user',callback) ]
         routes: [ 'ribcage', (callback) -> initRoutes env, env.logres('routes',callback) ]
         lweb: [ 'ribcage', (callback) -> initLweb env, env.logres('lweb', callback) ]
+        models: [ 'ribcage', (callback) -> initModels env, env.logres('models',callback) ]
+        reader: [ 'models', (callback) -> initReader env, env.logres('reader',callback) ]
+        writer: [ 'ribcage', 'reader' , (callback) -> initWriter env, env.logres('writer',callback) ]
         callback
 
 init env, (err,data) ->

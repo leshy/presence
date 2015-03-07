@@ -9,6 +9,7 @@ lweb = require 'lweb3/transports/client/websocket'
 queryProtocol = require 'lweb3/protocols/query'
 channelProtocol = require 'lweb3/protocols/channel'
 
+updatingCollection = Backbone.Collection.extend4000 initialize: -> @on 'del', (model) => @remove model
 
 settings = 
     websockethost: window.location.protocol + "//" + window.location.host
@@ -51,16 +52,26 @@ initWebsocket = (env,callback) ->
     else env.lweb.on 'connect', callback
 
 initViews = (env,callback) ->
+    env.views = require './clientside/views'
+    env.views.init env, callback
+
+initModels = (env,callback) ->
+    env.presence = new updatingCollection()
     callback()
     
+initMainView = (env,callback) ->
+    main = new env.views.main el: $('body'), model: env.presence
+    main.render()
+    callback()
 
 init = (env,callback) ->
     initLogger env, -> 
-
         async.auto
             documentready: ((callback) -> waitDocument env, callback)
-            views:       [ 'documentready', (callback) -> initViews env, callback ]
-            core:        [ 'views', env.wrapInit "Initializing core...", initCore ]
+            views:       env.wrapInit "Initializing Views...", initViews
+            models:      env.wrapInit "models...", initModels
+            mainView:    [ 'views', 'models', 'documentready','core', env.wrapInit "main view...", initMainView ]
+            core:        [ 'documentready', env.wrapInit "Initializing core...", initCore ]
             websocket:   [ 'core', env.wrapInit "Initializing connection...", initWebsocket ]
 
 init env, (err,data) ->
