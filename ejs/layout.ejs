@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<!-- Serverd by Presence Version <%= version %> -->
+
+<html lang="en">
+  <head>    
+    <title><%=title%></title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Language" content="en-US">
+    <meta name="author" content="razmjena">
+    
+    <% if (typeof icon != "undefined") { %><link rel="icon" href="<%= icon %>" />
+    <% } else { %><link rel="icon" href="/img/bitcoinlab.png" /><% } %>
+
+    <% if (typeof addcss != "undefined") { for (i in addcss) { %><link rel="stylesheet" href="<%= addcss[i] %>?v=<%= version %>" /><% }} %>
+    <% if (typeof addjs != "undefined") { for (i in addjs) { %><script type="text/javascript" src="<%= addjs[i] %>?v=<%= version %>"></script> <% }} %>
+    
+  </head>
+  <body>
+    <%- body -%>
+  </body>
+</html>
+
+
