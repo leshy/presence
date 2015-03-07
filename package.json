@@ -1,0 +1,21 @@
+{
+  "name": "presence",
+  "version": "1.0.0",
+  "description": "presence",
+  "main": "serverside.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/leshy/presence.git"
+  },
+  "author": "lesh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leshy/presence/issues"
+  },
+  "homepage": "https://github.com/leshy/presence"
+}
