@@ -17,5 +17,23 @@
   "bugs": {
     "url": "https://github.com/leshy/presence/issues"
   },
+  "dependencies": {
+    "async": "0.9.0",
+    "backbone4000": "git://github.com/leshy/backbone4000.git",
+    "colors": "1.0.3",
+    "ejs": "1.0.0",
+    "ejs-locals": "1.0.2",
+    "express": "3.0.5",
+    "ribcage": "git://github.com/leshy/ribcage.git",
+    "ribcage_db": "git://github.com/leshy/ribcage_db.git",
+    "ribcage_express": "git://github.com/leshy/ribcage_express.git",
+    "ribcage_logger": "git://github.com/leshy/ribcage_logger.git",
+    "socket.io": "0.9.13",
+    "socket.io-browserify": "0.9.6"
+  },
+  "devDependencies": {
+    "browserify": "9.0.3",
+    "ejsify": "1.0.0"
+  },
   "homepage": "https://github.com/leshy/presence"
 }
