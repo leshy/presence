@@ -45,12 +45,20 @@ initCore = (env,callback) ->
     env.lweb = new lweb.webSocketClient( host: env.settings.websockethost, verbose: false )
     env.lweb.addProtocol new queryProtocol.client( verbose: true )
     env.lweb.addProtocol new channelProtocol.client( verbose: true )
+    
     callback()
     
 initWebsocket = (env,callback) ->
     if env.lweb.attributes.socketIo.socket.connected then callback()
     else env.lweb.on 'connect', callback
 
+joinChannel = (env,callback) ->
+    mac = Backbone.Model.extend4000 {}
+    env.lweb.channel('macs').join (msg) ->
+        if msg.state then env.presence.add new mac mac: msg.mac
+        else env.presence.each (oldMac) ->
+            if oldMac.get('mac')== msg.mac then env.presence.remove oldMac
+    
 initViews = (env,callback) ->
     env.views = require './clientside/views'
     env.views.init env, callback
@@ -62,6 +70,7 @@ initModels = (env,callback) ->
 initMainView = (env,callback) ->
     main = new env.views.main el: $('body'), model: env.presence
     main.render()
+    console.log 'subscribe!'
     callback()
 
 init = (env,callback) ->
@@ -73,6 +82,7 @@ init = (env,callback) ->
             mainView:    [ 'views', 'models', 'documentready','core', env.wrapInit "main view...", initMainView ]
             core:        [ 'documentready', env.wrapInit "Initializing core...", initCore ]
             websocket:   [ 'core', env.wrapInit "Initializing connection...", initWebsocket ]
+            channel:     [ 'websocket','mainView', 'models', env.wrapInit "Subscribing...", joinChannel ]
 
 init env, (err,data) ->
     if err then env.log('clientside init failed', {}, 'init', 'fail', 'error');return

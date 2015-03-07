@@ -1,0 +1,60 @@
+b8:8d:12:06:ff:b4	Stojić
+74:e5:0b:b2:a6:d2	Špoljo
+08:11:96:01:f6:84	Aka
+00:26:08:e3:1b:a8	Dubravka
+00:04:f2:02:3b:46	Mama Infrastruktura
+00:0a:5e:53:c6:eb	Mama Infrastruktura
+52:54:00:f2:5b:f6	Mama Infrastruktura
+00:e0:18:f4:7c:91	Mama Infrastruktura
+b8:8d:12:2d:78:40	Ivor
+c0:9f:42:eb:15:d5	Ivor
+8c:a9:82:b9:f7:2e	Mans
+00:1d:e0:28:25:75	Domes
+00:23:12:00:15:42	Aco Erkalović
+74:f0:6d:09:9a:a8	Ira
+20:16:d8:c3:7e:80	Ira
+00:23:df:5d:b5:18	Petar Milat
+60:d8:19:23:5e:47	Horki
+18:34:51:b9:f0:4a	Horki
+6c:40:08:93:09:9a	Horki
+90:e6:ba:02:89:86	Igor Markovic
+00:23:8b:e8:71:aa	Radovan
+00:26:5e:2b:70:b0	Radovan
+74:e5:0b:86:31:74	Plejić
+98:d6:f7:8c:17:74	Plejić
+8c:a9:82:9e:63:c6	David
+38:e7:d8:df:3b:05	David
+00:14:a5:d0:e9:2b	Nikola
+dc:0e:a1:89:ee:f8	Nikola
+00:c0:ca:3f:33:cf	Nikola
+00:1a:73:5a:a8:28	Domagoj
+78:d6:f0:35:71:2a	Domagoj
+84:a6:c8:78:14:50	Domagoj
+88:32:9b:27:40:79	Domagoj
+00:16:cf:a5:2c:f1	Mario
+00:13:e8:8c:80:b9	Lovro
+7c:61:93:2c:2a:e6	Lovro
+9c:4e:36:5a:c4:18	Lovro
+20:10:7a:27:d6:2f	Lovro
+f0:de:f1:9f:4f:5d	Gospon Ivo :-)
+f8:db:7f:98:e7:85	Rukk
+00:25:00:3d:c1:51	Mali Aco
+00:18:de:9e:39:36	Bariša²
+00:1f:3c:01:bf:38	Boto
+00:1e:4c:1e:76:4f	Leš
+00:25:d3:68:95:de	Leš
+d0:22:be:47:04:b1	Leš
+68:a8:6d:ee:54:36	Neduhoviti moroni
+00:21:6a:83:b5:3e	Veljko
+60:67:20:43:83:16	Veljko
+58:94:6b:6f:d8:28	Horkijev frend
+10:40:f3:92:02:80	Nikica
+00:26:c7:20:db:20	Marcell
+0a:11:c2:69:bd:7a	Dovlin Frend
+00:17:f2:40:50:6c	Dovla
+00:14:a5:d0:eb:51	Dovla
+74:e5:0b:47:28:94	Klemo
+b8:8d:12:0a:f8:b6	Šarić M
+04:0c:ce:d8:ed:20	Šarić F
+04:f7:e4:1e:ba:82	Šarić F
+7c:c3:a1:9d:63:f0	Luka

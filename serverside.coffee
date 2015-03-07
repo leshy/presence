@@ -5,7 +5,7 @@ helpers = require 'helpers'
 Bacbone = require 'backbone4000'
 collections = require 'collections/serverside'
 
-lwebNs = require 'lweb3/transports/server/nssocket'
+lwebTcp = require 'lweb3/transports/server/tcp'
 lwebWs = require 'lweb3/transports/server/websocket'
 
 queryProtocol = require 'lweb3/protocols/query'
@@ -134,32 +134,50 @@ dropPrivileges = (env,callback) ->
 initLweb = (env,callback) ->
     env.lweb = new lwebWs.webSocketServer http: env.http, verbose: false
     env.lweb.addProtocol new queryProtocol.serverServer verbose: false
-    env.lweb.addProtocol new channelProtocol.serverServer verbose: false
+    env.lweb.addProtocol new channelProtocol.serverServer verbose: true
     callback()
 
+initIgnoreList = (env,callback) ->
+    
+
 initReader = (env,callback) ->
-    env.probeListener = new lwebNs.nssocketServer
-        port: settings.probePort, name: 'probe'
+    env.probeListener = new lwebTcp.tcpServer
+        port: settings.probePort, name: 'probe', verbose: true
+
         
-    env.probeListener.on 'connect', (channel) ->
-        console.log 'connection received'
-        channel.subscribe true, (msg) -> console.log 'got',msg
+    packet = (state,mac) ->
+        if state is undefined or not mac then return
+        if env.ignore[mac] then return
+
+        console.log 'mac', mac, 'state', state
         
-    env.probeListener.on 'disconnect', ->
-        console.log 'connection lost'
+        env.lweb.channel('macs').broadcast mac: mac, state: state
+        
+    env.probeListener.on 'connect', (channel) -> 
+        channel.subscribe true, (msg) ->
+            _.map msg.split('\n'), (line) ->
+                if not line then return
+                [state, mac] = line.split(' ')
+                packet Number(state), mac
         
     callback null, "port #{settings.probePort}"
 
-initModels = (env,callback) ->    
-    env.logdb = new collections.MongoCollection collection: 'log', db: env.db
-    env.logdb.defineModel 'entry', {}
-    callback null, true
+initModels = (env,callback) ->
+    env.ignore = {}
+    env.db.log = new collections.MongoCollection collection: 'log', db: env.db
+    env.logon = env.db.log.defineModel 'on', {}
+    env.logoff = env.db.log.defineModel 'off', {}
+    
+    env.db.ignore = new collections.MongoCollection collection: 'ignore', db: env.db
+    env.db.ignore.find {}, {}, ((err,entry) ->
+        env.ignore[entry.mac] = true
+    ), (err,data) ->
+        console.log 'ignoring', env.ignore
+        callback null, true
 
 initWriter = (env,callback) ->
     callback null, true
 
-initTestData = (env,callback) ->
-    true
 
 init = (env,callback) ->
     async.auto
